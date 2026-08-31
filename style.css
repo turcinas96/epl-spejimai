@@ -1,0 +1,139 @@
+:root {
+  --bg: #0d1117;
+  --panel-bg: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #37003c; /* EPL purple */
+  --accent-2: #00ff87; /* EPL green */
+  --correct: #2ea043;
+  --close: #d29922;
+  --off: #f85149;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.page-header {
+  text-align: center;
+  padding: 24px 16px 12px;
+  background: linear-gradient(135deg, var(--accent), #1a0b2e);
+  border-bottom: 3px solid var(--accent-2);
+}
+
+.page-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: #d0c7e0;
+}
+
+.legend {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: #d0c7e0;
+}
+
+.badge {
+  font-size: 0.9rem;
+}
+
+.badge-correct { color: var(--correct); }
+.badge-close { color: var(--close); }
+.badge-off { color: var(--off); }
+
+.board {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 16px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.table-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.table-panel.actual {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 1px rgba(0, 255, 135, 0.2);
+}
+
+.table-panel h2 {
+  text-align: center;
+  margin: 4px 0 12px;
+  font-size: 1.1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th, td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+td.pos, th:first-child {
+  width: 28px;
+  text-align: center;
+}
+
+td.delta {
+  width: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+tr.zone-ucl td.pos { border-left: 3px solid #1f6feb; }
+tr.zone-uel td.pos { border-left: 3px solid #f0883e; }
+tr.zone-relegation td.pos { border-left: 3px solid #f85149; }
+
+.delta.correct { color: var(--correct); }
+.delta.close { color: var(--close); }
+.delta.off { color: var(--off); }
+
+.page-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 16px;
+}
+
+.page-footer code {
+  background: var(--panel-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPL Predictions Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Premier League Predictions</h1>
+    <p class="subtitle" id="season-label"></p>
+    <p class="legend">
+      <span class="badge badge-correct">●</span> Correct position
+      <span class="badge badge-close">●</span> Off by 1-2
+      <span class="badge badge-off">●</span> Off by 3+
+    </p>
+  </header>
+
+  <main class="board">
+    <section class="table-panel" id="panel-a">
+      <h2 id="name-a"></h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Team</th><th>Δ</th></tr>
+        </thead>
+        <tbody id="rows-a"></tbody>
+      </table>
+    </section>
+
+    <section class="table-panel actual" id="panel-actual">
+      <h2>Actual Table</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Team</th><th>Pts</th></tr>
+        </thead>
+        <tbody id="rows-actual"></tbody>
+      </table>
+    </section>
+
+    <section class="table-panel" id="panel-b">
+      <h2 id="name-b"></h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Team</th><th>Δ</th></tr>
+        </thead>
+        <tbody id="rows-b"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>Edit <code>data.js</code> to update predictions and the real standings.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
