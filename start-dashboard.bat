@@ -11,8 +11,8 @@ docker-compose up -d
 
 REM Wait for backend to be ready
 echo.
-echo ⏳ Waiting for services to start (this may take 30-60 seconds)...
-timeout /t 15 /nobreak
+echo ⏳ Waiting for services to start (this may take 60-90 seconds)...
+timeout /t 60 /nobreak
 
 REM Load predictions
 echo.
@@ -21,6 +21,10 @@ python load_predictions.py
 
 if errorlevel 1 (
     echo ❌ Failed to load predictions.
+    echo.
+    echo Try running these commands manually:
+    echo   1. docker-compose logs backend  (to check backend status)
+    echo   2. python load_predictions.py   (to retry loading)
     pause
     exit /b 1
 )
