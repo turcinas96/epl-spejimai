@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String, JSON
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database setup
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://epl_user:epl_password@localhost:5432/epl_predictions")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/epl_predictions")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -47,10 +47,18 @@ class PredictionResponse(BaseModel):
     username: str
     display_name: str
     season: str
-    teams: List[TeamPrediction]
+    teams: List[dict]
     
     class Config:
         from_attributes = True
+
+# Dependency to get DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # FastAPI app
 app = FastAPI(title="EPL Predictions API")
@@ -71,10 +79,7 @@ def health_check():
 
 # Create prediction
 @app.post("/api/predictions/", response_model=PredictionResponse)
-def create_prediction(prediction: PredictionInput, db: Session = None):
-    if db is None:
-        db = SessionLocal()
-    
+def create_prediction(prediction: PredictionInput, db: Session = Depends(get_db)):
     try:
         # Check if prediction already exists
         existing = db.query(PredictionModel).filter(
@@ -101,27 +106,22 @@ def create_prediction(prediction: PredictionInput, db: Session = None):
         db.commit()
         db.refresh(db_prediction)
         return db_prediction
-    finally:
-        db.close()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
 
 # Get all predictions
 @app.get("/api/predictions/", response_model=List[PredictionResponse])
-def get_predictions(db: Session = None):
-    if db is None:
-        db = SessionLocal()
-    
+def get_predictions(db: Session = Depends(get_db)):
     try:
         predictions = db.query(PredictionModel).all()
         return predictions
-    finally:
-        db.close()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # Get prediction by username
 @app.get("/api/predictions/{username}", response_model=PredictionResponse)
-def get_prediction(username: str, db: Session = None):
-    if db is None:
-        db = SessionLocal()
-    
+def get_prediction(username: str, db: Session = Depends(get_db)):
     try:
         prediction = db.query(PredictionModel).filter(
             PredictionModel.username == username
@@ -131,15 +131,14 @@ def get_prediction(username: str, db: Session = None):
             raise HTTPException(status_code=404, detail="Prediction not found")
         
         return prediction
-    finally:
-        db.close()
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # Delete prediction
 @app.delete("/api/predictions/{username}")
-def delete_prediction(username: str, db: Session = None):
-    if db is None:
-        db = SessionLocal()
-    
+def delete_prediction(username: str, db: Session = Depends(get_db)):
     try:
         prediction = db.query(PredictionModel).filter(
             PredictionModel.username == username
@@ -151,8 +150,10 @@ def delete_prediction(username: str, db: Session = None):
         db.delete(prediction)
         db.commit()
         return {"message": "Prediction deleted"}
-    finally:
-        db.close()
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
