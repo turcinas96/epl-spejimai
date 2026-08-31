@@ -34,16 +34,5 @@ services:
       timeout: 5s
       retries: 5
 
-  frontend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
-    environment:
-      VITE_API_URL: http://localhost:8000
-
 volumes:
   postgres_data:
