@@ -1,4 +1,4 @@
-// Edit this file to update predictions and the real table.
+// Edit this file to update predictions and the saved-table fallback.
 // Each table is an array of 20 team names, in order from 1st to 20th place.
 // "points" is optional — if provided it will be shown next to the team name.
 
@@ -57,7 +57,7 @@ const DATA = {
     ]
   },
 
-  // Update this table as the real season progresses (or at the end for the final standings).
+  // Used only when the live standings service is unavailable.
   actual: {
     table: [
       { team: "Arsenal", played: 0, points: 0 },

@@ -1,3 +1,18 @@
+const STANDINGS_URL = "https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings";
+
+const TEAM_NAMES = {
+  "AFC Bournemouth": "Bournemouth",
+  "Brighton & Hove Albion": "Brighton",
+  "Coventry City": "Coventry",
+  "Hull City": "Hull",
+  "Ipswich Town": "Ipswich",
+  "Leeds United": "Leeds"
+};
+
+function normalizeTeamName(name) {
+  return TEAM_NAMES[name] ?? name;
+}
+
 function zoneClass(position) {
   if (position <= 4) return "zone-ucl";
   if (position === 5) return "zone-uel";
@@ -7,7 +22,7 @@ function zoneClass(position) {
 
 function buildActualPositionMap(actualTable) {
   const map = new Map();
-  actualTable.forEach((row, index) => map.set(row.team, index + 1));
+  actualTable.forEach((row, index) => map.set(normalizeTeamName(row.team), index + 1));
   return map;
 }
 
@@ -25,7 +40,7 @@ function renderPredictionTable(tbodyId, predictionTable, actualPosMap) {
 
   predictionTable.forEach((row, index) => {
     const predictedPos = index + 1;
-    const actualPos = actualPosMap.get(row.team) ?? null;
+    const actualPos = actualPosMap.get(normalizeTeamName(row.team)) ?? null;
     const delta = deltaInfo(predictedPos, actualPos);
 
     const tr = document.createElement("tr");
@@ -56,16 +71,49 @@ function renderActualTable(actualTable) {
   });
 }
 
-function render() {
+function render(actualTable, status) {
   document.getElementById("season-label").textContent = `${DATA.season} season`;
   document.getElementById("name-a").textContent = `${DATA.predictorA.name}'s Prediction`;
   document.getElementById("name-b").textContent = `${DATA.predictorB.name}'s Prediction`;
+  document.getElementById("actual-status").textContent = status;
 
-  const actualPosMap = buildActualPositionMap(DATA.actual.table);
+  const actualPosMap = buildActualPositionMap(actualTable);
 
   renderPredictionTable("rows-a", DATA.predictorA.table, actualPosMap);
-  renderActualTable(DATA.actual.table);
+  renderActualTable(actualTable);
   renderPredictionTable("rows-b", DATA.predictorB.table, actualPosMap);
 }
 
-render();
+function statValue(entry, name) {
+  return entry.stats.find((stat) => stat.name === name)?.value ?? 0;
+}
+
+async function loadLiveStandings() {
+  const response = await fetch(STANDINGS_URL);
+  if (!response.ok) throw new Error(`Standings request failed: ${response.status}`);
+
+  const payload = await response.json();
+  const entries = payload.children?.[0]?.standings?.entries;
+  if (!Array.isArray(entries) || entries.length !== 20) {
+    throw new Error("Live standings were incomplete.");
+  }
+
+  return entries.map((entry) => ({
+    team: normalizeTeamName(entry.team.displayName),
+    played: statValue(entry, "gamesPlayed"),
+    points: statValue(entry, "points")
+  }));
+}
+
+async function initializeDashboard() {
+  render(DATA.actual.table, "Loading live standings...");
+
+  try {
+    const actualTable = await loadLiveStandings();
+    render(actualTable, "Live standings via ESPN");
+  } catch {
+    render(DATA.actual.table, "Live standings unavailable - showing saved table");
+  }
+}
+
+initializeDashboard();
