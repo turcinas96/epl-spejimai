@@ -72,11 +72,10 @@ function renderActualTable(actualTable) {
   });
 }
 
-function render(actualTable, status) {
+function render(actualTable) {
   document.getElementById("season-label").textContent = `${DATA.season} season`;
-  document.getElementById("name-a").textContent = `${DATA.predictorA.name}'s Prediction`;
-  document.getElementById("name-b").textContent = `${DATA.predictorB.name}'s Prediction`;
-  document.getElementById("actual-status").textContent = status;
+  document.getElementById("name-a").textContent = DATA.predictorA.name;
+  document.getElementById("name-b").textContent = DATA.predictorB.name;
 
   const actualPosMap = buildActualPositionMap(actualTable);
 
@@ -107,13 +106,13 @@ async function loadLiveStandings() {
 }
 
 async function initializeDashboard() {
-  render(DATA.actual.table, "Loading live standings...");
+  render(DATA.actual.table);
 
   try {
     const actualTable = await loadLiveStandings();
-    render(actualTable, "Live standings via ESPN");
+    render(actualTable);
   } catch {
-    render(DATA.actual.table, "Live standings unavailable - showing saved table");
+    render(DATA.actual.table);
   }
 }
 

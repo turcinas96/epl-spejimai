@@ -87,14 +87,6 @@ body {
   font-size: 1.1rem;
 }
 
-.table-status {
-  min-height: 1rem;
-  margin: -8px 0 10px;
-  color: var(--muted);
-  font-size: 0.7rem;
-  text-align: center;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
