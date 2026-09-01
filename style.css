@@ -112,9 +112,10 @@ td.pos, th:first-child {
 }
 
 td.delta {
-  width: 30px;
+  width: 44px;
   text-align: center;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 tr.zone-ucl td.pos { border-left: 3px solid #1f6feb; }
