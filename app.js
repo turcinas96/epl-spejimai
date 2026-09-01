@@ -30,8 +30,9 @@ function deltaInfo(predictedPos, actualPos) {
   if (actualPos == null) return { label: "–", cls: "" };
   const diff = Math.abs(predictedPos - actualPos);
   if (diff === 0) return { label: "0", cls: "correct" };
-  if (diff <= 2) return { label: String(diff), cls: "close" };
-  return { label: String(diff), cls: "off" };
+  const arrow = actualPos < predictedPos ? "&uarr;" : "&darr;";
+  if (diff <= 2) return { label: `${arrow} ${diff}`, cls: "close" };
+  return { label: `${arrow} ${diff}`, cls: "off" };
 }
 
 function renderPredictionTable(tbodyId, predictionTable, actualPosMap) {
