@@ -118,10 +118,6 @@ td.delta {
   white-space: nowrap;
 }
 
-tr.zone-ucl td.pos { border-left: 3px solid #1f6feb; }
-tr.zone-uel td.pos { border-left: 3px solid #f0883e; }
-tr.zone-relegation td.pos { border-left: 3px solid #f85149; }
-
 .delta.correct { color: var(--correct); }
 .delta.close { color: var(--close); }
 .delta.off { color: var(--off); }
