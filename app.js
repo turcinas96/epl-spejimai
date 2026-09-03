@@ -35,6 +35,13 @@ function deltaInfo(predictedPos, actualPos) {
   return { label: `${arrow} ${diff}`, cls: "off" };
 }
 
+function totalDifference(predictionTable, actualPosMap) {
+  return predictionTable.reduce((total, row, index) => {
+    const actualPos = actualPosMap.get(normalizeTeamName(row.team));
+    return total + (actualPos == null ? 0 : Math.abs(index + 1 - actualPos));
+  }, 0);
+}
+
 function renderPredictionTable(tbodyId, predictionTable, actualPosMap) {
   const tbody = document.getElementById(tbodyId);
   tbody.innerHTML = "";
@@ -78,6 +85,8 @@ function render(actualTable) {
   document.getElementById("name-b").textContent = DATA.predictorB.name;
 
   const actualPosMap = buildActualPositionMap(actualTable);
+  document.getElementById("total-a").textContent = `Total difference: ${totalDifference(DATA.predictorA.table, actualPosMap)} positions`;
+  document.getElementById("total-b").textContent = `Total difference: ${totalDifference(DATA.predictorB.table, actualPosMap)} positions`;
 
   renderPredictionTable("rows-a", DATA.predictorA.table, actualPosMap);
   renderActualTable(actualTable);

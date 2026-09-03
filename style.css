@@ -87,6 +87,13 @@ body {
   font-size: 1.1rem;
 }
 
+.total-difference {
+  margin: -6px 0 10px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
