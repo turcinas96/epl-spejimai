@@ -85,8 +85,8 @@ function render(actualTable) {
   document.getElementById("name-b").textContent = DATA.predictorB.name;
 
   const actualPosMap = buildActualPositionMap(actualTable);
-  document.getElementById("total-a").textContent = `Total difference: ${totalDifference(DATA.predictorA.table, actualPosMap)} positions`;
-  document.getElementById("total-b").textContent = `Total difference: ${totalDifference(DATA.predictorB.table, actualPosMap)} positions`;
+  document.getElementById("total-a").textContent = `Total: ${totalDifference(DATA.predictorA.table, actualPosMap)}`;
+  document.getElementById("total-b").textContent = `Total: ${totalDifference(DATA.predictorB.table, actualPosMap)}`;
 
   renderPredictionTable("rows-a", DATA.predictorA.table, actualPosMap);
   renderActualTable(actualTable);

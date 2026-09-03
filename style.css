@@ -83,15 +83,25 @@ body {
 
 .table-panel h2 {
   text-align: center;
-  margin: 4px 0 12px;
+  margin: 0;
   font-size: 1.1rem;
 }
 
+.prediction-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  min-height: 38px;
+  margin: 4px 0 12px;
+}
+
 .total-difference {
-  margin: -6px 0 10px;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-align: center;
+  margin: 0;
+  color: var(--accent-2);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 table {
